@@ -45,10 +45,10 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
-  if (!name || !about || !avatar) {
+ /* if (!name || !about || !avatar) {
     res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
     return;
-  }
+  }*/
 
   usersSchema.create({ name, about, avatar })
     .then((userData) => {
