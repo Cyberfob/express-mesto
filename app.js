@@ -11,7 +11,8 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 // Подключение к БД
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', { runValidators: true });
+mongoose.set('runValidators', true);
+mongoose.connect('mongodb://localhost:27017/mestodb');
 /* мидлвары : Json и заглушка для _id */
 app.use(express.json());
 app.use((req, res, next) => {
@@ -46,5 +47,6 @@ app.all('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log('server start on 3000 PORT');
 });
