@@ -10,8 +10,8 @@ users.get('/users/:userId', getUser);
 
 users.post('/users', createUser);
 
-users.patch('/users/', updateUser);
+users.patch('/users/me', updateUser);
 
-users.patch('users/me/avatar', updateUserAvatar);
+users.patch('/users/me/avatar', updateUserAvatar);
 
 module.exports = users;
