@@ -2,16 +2,16 @@ const constants = require('http2');
 const usersSchema = require('../models/user');
 
 module.exports.getAllUsers = (req, res) => {
-  if (req.params) {
+  if (!req.params) {
     res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
     return;
   }
-  usersSchema.find(req.params)
+  usersSchema.find({})
     .then((userData) => {
       if (userData) {
-        res.send({ data: userData });
+        return res.send({ data: userData });
       }
-      throw new Error('Ошибка в теле запроса');
+      throw new Error('Нет карточек');
     })
     .catch((err) => {
       if (err.message === 'Ошибка в теле запроса') {
@@ -22,14 +22,14 @@ module.exports.getAllUsers = (req, res) => {
     });
 };
 module.exports.getUser = (req, res) => {
-  if (req.params.userId) {
+  if (!req.params.userId) {
     res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
     return;
   }
   usersSchema.findById(req.params.userId)
     .then((userData) => {
       if (userData) {
-        res.send({ data: userData });
+        return res.send({ data: userData });
       }
       throw new Error('Пользователь не найден');
     })
@@ -53,7 +53,7 @@ module.exports.createUser = (req, res) => {
   usersSchema.create({ name, about, avatar })
     .then((userData) => {
       if (userData) {
-        res.send({ data: userData });
+        return res.send({ data: userData });
       }
       throw new Error('Ошибка в теле запроса');
     })
@@ -77,7 +77,7 @@ module.exports.updateUser = (req, res) => {
   usersSchema.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((userData) => {
       if (userData) {
-        res.send({ data: userData });
+        return res.send({ data: userData });
       }
       throw new Error('Ошибка в теле запроса');
     })
@@ -101,7 +101,7 @@ module.exports.updateUserAvatar = (req, res) => {
   usersSchema.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((userData) => {
       if (userData) {
-        res.send({ data: userData });
+        return res.send({ data: userData });
       }
       throw new Error('Ошибка в теле запроса');
     })

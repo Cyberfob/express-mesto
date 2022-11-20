@@ -5,9 +5,11 @@ const card = require('../models/card');
 module.exports.getCards = (req, res) => {
   card.find(req.params)
     .then((cardsData) => {
-      if (cardsData) { res.send({ data: cardsData }); }
-    });
-  throw new Error('Нет карточек')
+      if (cardsData) {
+        return res.send({ data: cardsData });
+      }
+      throw new Error('Нет карточек');
+    })
     .catch((err) => {
       if (err.message === 'Нет карточек') {
         res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: `Ошибка при поиске карточек - ${err}` });
