@@ -1,15 +1,19 @@
-const card = require('../models/card');
+const constants = require('http2');
 
-const ERROR_CODE_404 = 404;
-const ERROR_CODE_500 = 500;
+const card = require('../models/card');
 
 module.exports.getCards = (req, res) => {
   card.find(req.params)
     .then((cardsData) => {
-      res.send({ data: cardsData });
-    })
+      if (cardsData) { res.send({ data: cardsData }); }
+    });
+  throw new Error('Нет карточек')
     .catch((err) => {
-      res.status(ERROR_CODE_404).send({ message: `Ошибка при поиске карточек - ${err}` });
+      if (err.message === 'Нет карточек') {
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: `Ошибка при поиске карточек - ${err}` });
+      } else {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера - ${err}` });
+      }
     });
 };
 
@@ -18,23 +22,38 @@ module.exports.createCard = (req, res) => {
 
   card.create({ name, link, owner: req.user._id })
     .then((cardData) => {
-      res.send({ data: cardData });
+      if (cardData) {
+        res.send({ data: cardData });
+      } else {
+        throw new Error('Ошибка в теле запроса');
+      }
     })
     .catch((err) => {
-      res.status(ERROR_CODE_500).send({ message: `Ошибка при создании карточки - ${err}` });
+      if (err.message === 'Ошибка в теле запроса') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера - ${err}` });
+      }
     });
 };
 
 module.exports.deleteCard = (req, res) => {
   card.findByIdAndRemove(req.params.cardId)
     .then((cardData) => {
-      res.send({ data: cardData });
+      if (cardData) {
+        res.send({ data: cardData });
+      } else {
+        throw new Error('Ошибка в теле запроса');
+      }
     })
     .catch((err) => {
-      res.status(ERROR_CODE_500).send({ message: `Ошибка удаления карточки ${err}` });
+      if (err.message === 'Ошибка в теле запроса') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера - ${err}` });
+      }
     });
 };
-
 module.exports.likeCard = (req, res) => {
   card.findByIdAndUpdate(
     req.params.cardId,
@@ -42,10 +61,18 @@ module.exports.likeCard = (req, res) => {
     { new: true },
   )
     .then((cardData) => {
-      res.send({ data: cardData });
+      if (cardData) {
+        res.send({ data: cardData });
+      } else {
+        throw new Error('Ошибка в теле запроса');
+      }
     })
     .catch((err) => {
-      res.status(ERROR_CODE_500).send({ message: `Ошибка добавления лайка ${err}` });
+      if (err.message === 'Ошибка в теле запроса') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера - ${err}` });
+      }
     });
 };
 
@@ -56,9 +83,15 @@ module.exports.dislikeCard = (req, res) => {
     { new: true },
   )
     .then((cardData) => {
-      res.send({ data: cardData });
+      if (cardData) {
+        res.send({ data: cardData });
+      }
     })
     .catch((err) => {
-      res.status(ERROR_CODE_500).send({ message: `Ошибка удаления лайка ${err}` });
+      if (err.message === 'Ошибка в теле запроса') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+      } else {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера - ${err}` });
+      }
     });
 };

@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const constants = require('http2');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 
@@ -10,8 +11,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 // Подключение к БД
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
-});
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb', { runValidators: true });
 /* мидлвары : Json и заглушка для _id */
 app.use(express.json());
 app.use((req, res, next) => {
@@ -36,5 +36,15 @@ app.use('/cards', cards); // (req, res) => {res.send(req.params)
 app.use('/cards/:cardsId', cards);
 app.use('/cards/:cardsId/likes', cards);
 
+// Заглушка для запроса неуществующих адресов
+app.all('*', (req, res) => {
+  res
+    .status(constants.HTTP_STATUS_NOT_FOUND)
+    .send({
+      message: 'Запрашиваемая страница не найдена',
+    });
+});
+
 app.listen(PORT, () => {
+  console.log('server start on 3000 PORT');
 });
