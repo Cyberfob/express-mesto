@@ -44,11 +44,28 @@ module.exports.getUser = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
+  usersSchema.create({ name, about, avatar })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      // eslint-disable-next-line no-underscore-dangle
+      if (err._message === 'user validation failed') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({
+          message: 'Некорректные данные пользователя.',
+        });
+      } else {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({
+          message: 'На сервере произошла ошибка.',
+        });
+      }
+    });
+};
 
- /* if (!name || !about || !avatar) {
+  /*const { name, about, avatar } = req.body;
+
+  if (!name || !about || !avatar) {
     res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
     return;
-  }*/
+  }
 
   usersSchema.create({ name, about, avatar })
     .then((userData) => {
@@ -63,8 +80,8 @@ module.exports.createUser = (req, res) => {
         return;
       }
       res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера ${err}` });
-    });
-};
+    });*/
+
 
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
