@@ -88,7 +88,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((cardData) => {
       if (cardData) {
-        res.send({ data: cardData });
+        return res.send({ data: cardData });
       }
       throw new Error('Ошибка в теле запроса');
     })
