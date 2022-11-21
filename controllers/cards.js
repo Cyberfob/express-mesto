@@ -52,10 +52,11 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Ошибка в теле запроса') {
-        res.status(ERROR_CODE_400).send({ message: 'Ошибка в теле запроса' });
+        res.status(ERROR_CODE_404).send({ message: 'Ошибка в теле запроса' });
       } else {
-        res.status(ERROR_CODE_500).send({ message: `Ошибка сервера - ${err}` });
+        res.status(ERROR_CODE_400).send({ message: `Ошибка в теле запроса - ${err}` });
       }
+      res.status(ERROR_CODE_500).send({ message: `Ошибка сервера - ${err}` });
     });
 };
 module.exports.likeCard = (req, res) => {
