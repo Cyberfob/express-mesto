@@ -71,7 +71,7 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
   if (!name || !about) {
-    res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+    res.status(ERROR_CODE_400).send({ message: 'Ошибка в теле запроса' });
     return;
   }
 
@@ -84,17 +84,17 @@ module.exports.updateUser = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Ошибка в теле запроса') {
-        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        res.status(ERROR_CODE_404).send({ message: 'Ошибка в теле запроса' });
         return;
       }
-      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера ${err}` });
+      res.status(ERROR_CODE_500).send({ message: `Ошибка сервера ${err}` });
     });
 };
 
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   if (!avatar) {
-    res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Ошибка в теле запроса' });
+    res.status(ERROR_CODE_400).send({ message: 'Ошибка в теле запроса' });
     return;
   }
 
@@ -107,9 +107,9 @@ module.exports.updateUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Ошибка в теле запроса') {
-        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Ошибка в теле запроса' });
+        res.status(ERROR_CODE_404).send({ message: 'Ошибка в теле запроса' });
         return;
       }
-      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера ${err}` });
+      res.status(ERROR_CODE_500).send({ message: `Ошибка сервера ${err}` });
     });
 };

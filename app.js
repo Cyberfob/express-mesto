@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const constants = require('http2');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
+
+const ERROR_CODE_404 = 404;
 
 // Настройка порта
 const { PORT = 3000 } = process.env;
@@ -40,11 +41,9 @@ app.use('/cards/:cardsId/likes', cards);
 
 // Заглушка для запроса неуществующих адресов
 app.all('*', (req, res) => {
-  res
-    .status(constants.HTTP_STATUS_NOT_FOUND)
-    .send({
-      message: 'Запрашиваемая страница не найдена',
-    });
+  res.status(ERROR_CODE_404).send({
+    message: 'Запрашиваемая страница не найдена',
+  });
 });
 
 app.listen(PORT, () => {
