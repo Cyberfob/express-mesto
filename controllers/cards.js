@@ -90,6 +90,7 @@ module.exports.dislikeCard = (req, res) => {
       if (cardData) {
         res.send({ data: cardData });
       }
+      throw new Error('Ошибка в теле запроса');
     })
     .catch((err) => {
       if (err.message === 'Ошибка в теле запроса') {

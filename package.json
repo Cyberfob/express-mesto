@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/Cyberfob/express-mesto.git"
   },
-  "author": "Artem P",
+  "author": "Artem Petrukhin",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Cyberfob/express-mesto/issues"
