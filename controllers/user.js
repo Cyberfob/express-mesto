@@ -38,10 +38,10 @@ module.exports.getUser = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Пользователь не найден') {
-        res.status(ERROR_CODE_400).send({ message: 'Пользователь не найден' });
+        res.status(ERROR_CODE_404).send({ message: 'Пользователь не найден' });
         return;
       }
-      res.status(ERROR_CODE_500).send({ message: `Ошибка сервера ${err}` });
+      res.status(ERROR_CODE_400).send({ message: `Ошибка в теле запроса ${err}` });
     });
 };
 
@@ -49,7 +49,7 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   if (!name || !about || !avatar) {
-    res.status(ERROR_CODE_404).send({ message: 'Ошибка в теле запроса' });
+    res.status(ERROR_CODE_400).send({ message: 'Ошибка в теле запроса' });
     return;
   }
 
@@ -62,10 +62,10 @@ module.exports.createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Ошибка в теле запроса') {
-        res.status(ERROR_CODE_400).send({ message: 'Ошибка в теле запроса' });
+        res.status(ERROR_CODE_404).send({ message: 'Ошибка в теле запроса' });
         return;
       }
-      res.status(ERROR_CODE_500).send({ message: `Ошибка сервера ${err}` });
+      res.status(ERROR_CODE_400).send({ message: `Ошибка в теле запроса ${err}` });
     });
 };
 
@@ -73,7 +73,7 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
   if (!name || !about) {
-    res.status(ERROR_CODE_404).send({ message: 'Ошибка в теле запроса' });
+    res.status(ERROR_CODE_400).send({ message: 'Ошибка в теле запроса' });
     return;
   }
 
